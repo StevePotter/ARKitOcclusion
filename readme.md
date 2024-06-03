@@ -7,8 +7,8 @@ In my AR iPhone app, virtual content (axis drawn as `SCNCylinder`) should not be
 
 ## Approach
 Here’s how I’m approaching the solution:
-- **Scene Setup**: When the app loads, it creates an `SCNCylinder` and adds it to the scene.
-- **Shader Implementation**: I apply a material with a `.fragment` `shaderModifier` to the cylinder. This shader uses the lidar depth map to decide whether to render each pixel.
+- **Scene Setup**: When the app loads, it creates a `SCNBox` and adds it to the scene.
+- **Shader Implementation**: I apply a material with a `.fragment` `shaderModifier` to the box. This shader uses the lidar depth map to decide whether to render each pixel.
 - **Depth Comparison**:
   1. Obtain screen coordinates of the fragment.
   2. Fetch the physical depth from the depth map.

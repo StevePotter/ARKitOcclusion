@@ -5,8 +5,8 @@ import SceneKit
 /// This class manages everything related to ARKit and SceneKit
 class ARController: NSObject  {
     var sceneView: ARSCNView? = nil
-    private let cylinderLength: Float = 1.0
-    private var cylinderMaterial: SCNMaterial? = nil
+    private let boxLength: Float = 1.0
+    private var boxMaterial: SCNMaterial? = nil
 
     func createARView() -> ARSCNView {
         let arView = ARSCNView()
@@ -21,9 +21,8 @@ class ARController: NSObject  {
         return arView
     }
 
-    func createCylinder(sceneView: ARSCNView) -> SCNNode {
-        // Create a long thin cylinder
-        let cylinder = SCNCylinder(radius: 0.04, height: CGFloat(cylinderLength))
+    func createBox(sceneView: ARSCNView) -> SCNNode {
+        let box = SCNBox(width: 0.5, height: 0.5, length: 0.5, chamferRadius: 0)
 
         // Create a material and assign a color
         let material = SCNMaterial()
@@ -31,28 +30,25 @@ class ARController: NSObject  {
         material.shaderModifiers = [
             .fragment: fragmentShader
         ]
-        cylinder.materials = [material]
+        box.materials = [material]
 
-        return SCNNode(geometry: cylinder)
+        return SCNNode(geometry: box)
     }
     
-    /// Positions the cylinder slightly in front of the camera as if it were laying down facing away
-    func positionCylinder(cylinderNode: SCNNode, sceneView: ARSCNView) {
+    /// Positions the box slightly in front of the camera as if it were laying down facing away
+    func positionBox(boxNode: SCNNode, sceneView: ARSCNView) {
         let distanceInFrontOfCamera: Float = 0.01  // 10 cm in front of the camera
-        cylinderNode.position = SCNVector3(0, 0, -(cylinderLength + distanceInFrontOfCamera))
-
-        // Rotate the cylinder to lay along the camera's z-axis
-        cylinderNode.eulerAngles = SCNVector3(Float.pi / 2, 0, 0)
+        boxNode.position = SCNVector3(0, 0, -(boxLength + distanceInFrontOfCamera))
     }
 
-    func setCylinderMaterialProperties(depthMap: CVPixelBuffer, cameraSize: CGSize, axisMaterial: SCNMaterial) {
+    func setBoxMaterialProperties(depthMap: CVPixelBuffer, cameraSize: CGSize, material: SCNMaterial) {
         guard let depthMap = pixelBufferToImage(depthMap, targetSize: cameraSize) else {
             print("Error: could not convert depth map to image")
             return
         }
-        axisMaterial.setValue(SCNMaterialProperty(contents: depthMap), forKey: "depthMap") // todo: is there a more optimal way to do this, like using MTLTexture?
-        axisMaterial.setValue(CGFloat(cameraSize.width), forKey: "screenWidth")
-        axisMaterial.setValue(CGFloat(cameraSize.height), forKey: "screenHeight")
+        material.setValue(SCNMaterialProperty(contents: depthMap), forKey: "depthMap") // todo: is there a more optimal way to do this, like using MTLTexture?
+        material.setValue(CGFloat(cameraSize.width), forKey: "screenWidth")
+        material.setValue(CGFloat(cameraSize.height), forKey: "screenHeight")
     }
 }
 
@@ -62,15 +58,15 @@ extension ARController: ARSessionDelegate {
         guard let sceneView = self.sceneView, let depthData = frame.sceneDepth?.depthMap else {
             return
         }
-        if let cylinderMaterial = self.cylinderMaterial {
-            setCylinderMaterialProperties(depthMap: depthData, cameraSize: frame.camera.imageResolution, axisMaterial: cylinderMaterial)
+        if let boxMaterial = self.boxMaterial {
+            setBoxMaterialProperties(depthMap: depthData, cameraSize: frame.camera.imageResolution, material: boxMaterial)
         } else {
-            let cylinderNode = createCylinder(sceneView: sceneView)
-            let cylinderMaterial = cylinderNode.geometry!.firstMaterial!
-            self.cylinderMaterial = cylinderMaterial
-            setCylinderMaterialProperties(depthMap: depthData, cameraSize: frame.camera.imageResolution, axisMaterial: cylinderMaterial)
-            positionCylinder(cylinderNode: cylinderNode, sceneView: sceneView)
-            sceneView.scene.rootNode.addChildNode(cylinderNode)
+            let boxNode = createBox(sceneView: sceneView)
+            let boxMaterial = boxNode.geometry!.firstMaterial!
+            self.boxMaterial = boxMaterial
+            setBoxMaterialProperties(depthMap: depthData, cameraSize: frame.camera.imageResolution, material: boxMaterial)
+            positionBox(boxNode: boxNode, sceneView: sceneView)
+            sceneView.scene.rootNode.addChildNode(boxNode)
         }
     }
 }
