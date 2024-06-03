@@ -5,7 +5,7 @@ import SceneKit
 /// This class manages everything related to ARKit and SceneKit
 class ARController: NSObject  {
     var sceneView: ARSCNView? = nil
-    
+    private let cylinderLength: Float = 1.0
     private var cylinderMaterial: SCNMaterial? = nil
 
     func createARView() -> ARSCNView {
@@ -21,9 +21,9 @@ class ARController: NSObject  {
         return arView
     }
 
-    func createCylinder() -> SCNNode {
-        // Create a cylinder that is thin and long
-        let cylinder = SCNCylinder(radius: 0.008, height: 1.0)
+    func createCylinder(sceneView: ARSCNView) -> SCNNode {
+        // Create a long thin cylinder
+        let cylinder = SCNCylinder(radius: 0.04, height: CGFloat(cylinderLength))
 
         // Create a material and assign a color
         let material = SCNMaterial()
@@ -33,13 +33,16 @@ class ARController: NSObject  {
         ]
         cylinder.materials = [material]
 
-        let cylinderNode = SCNNode(geometry: cylinder)
-        cylinderNode.position = SCNVector3(x: 0, y: 0, z: -0.1)  // Position the cylinder starting at the camera
+        return SCNNode(geometry: cylinder)
+    }
+    
+    /// Positions the cylinder slightly in front of the camera as if it were laying down facing away
+    func positionCylinder(cylinderNode: SCNNode, sceneView: ARSCNView) {
+        let distanceInFrontOfCamera: Float = 0.01  // 10 cm in front of the camera
+        cylinderNode.position = SCNVector3(0, 0, -(cylinderLength + distanceInFrontOfCamera))
 
-        // align along the z-axis
-        cylinderNode.eulerAngles = SCNVector3(x: Float.pi/2, y: 0, z: 0)
-        
-        return cylinderNode
+        // Rotate the cylinder to lay along the camera's z-axis
+        cylinderNode.eulerAngles = SCNVector3(Float.pi / 2, 0, 0)
     }
 
     func setCylinderMaterialProperties(depthMap: CVPixelBuffer, cameraSize: CGSize, axisMaterial: SCNMaterial) {
@@ -55,17 +58,18 @@ class ARController: NSObject  {
 
 extension ARController: ARSessionDelegate {
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
-        // note: you can also try frame.smoothedSceneDepth?.depthMap 
+        // note: you can also try frame.smoothedSceneDepth?.depthMap
         guard let sceneView = self.sceneView, let depthData = frame.sceneDepth?.depthMap else {
             return
         }
         if let cylinderMaterial = self.cylinderMaterial {
             setCylinderMaterialProperties(depthMap: depthData, cameraSize: frame.camera.imageResolution, axisMaterial: cylinderMaterial)
         } else {
-            let cylinderNode = createCylinder()
+            let cylinderNode = createCylinder(sceneView: sceneView)
             let cylinderMaterial = cylinderNode.geometry!.firstMaterial!
             self.cylinderMaterial = cylinderMaterial
             setCylinderMaterialProperties(depthMap: depthData, cameraSize: frame.camera.imageResolution, axisMaterial: cylinderMaterial)
+            positionCylinder(cylinderNode: cylinderNode, sceneView: sceneView)
             sceneView.scene.rootNode.addChildNode(cylinderNode)
         }
     }
@@ -110,3 +114,4 @@ func pixelBufferToImage(_ buffer: CVPixelBuffer, targetSize: CGSize) -> CGImage?
     // Create a CGImage from the scaled CIImage
     return ciContext.createCGImage(scaledImage, from: scaledImage.extent)
 }
+
