@@ -85,7 +85,8 @@ float4 modelSpacePosition = scn_node.modelViewTransform * float4(_surface.positi
 // the depth, in meters, of the fragment from the camera
 float modelDepth = -modelSpacePosition.z;
 
-float2 screenPosition = _surface.diffuseTexcoord * float2(screenWidth, screenHeight);
+// screenPosition IS DEFINITELY WRONG.  I think it will require some math with scn_node.inverseModelViewTransform or scn_node.modelViewProjectionTransform
+float2 screenPosition = _surface.diffuseTexcoord * float2(screenWidth, screenHeight); // x and y pixel coordinates of this fragment on the screen
 float physicalDepth = depthMap.sample(depthSampler, screenPosition).r;
 
 // if the depth map detects something before this fragment, don't paint
