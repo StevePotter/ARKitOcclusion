@@ -8,9 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		975F751E2C0A6A5600E02BA8 /* ARKitOcclusionApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 975F751D2C0A6A5600E02BA8 /* ARKitOcclusionApp.swift */; };
-		975F75202C0A6A5600E02BA8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 975F751F2C0A6A5600E02BA8 /* ContentView.swift */; };
 		975F75222C0A6A5800E02BA8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 975F75212C0A6A5800E02BA8 /* Assets.xcassets */; };
-		975F75252C0A6A5800E02BA8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 975F75242C0A6A5800E02BA8 /* Preview Assets.xcassets */; };
 		975F752C2C0A6B9B00E02BA8 /* ARViewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 975F752B2C0A6B9B00E02BA8 /* ARViewContainer.swift */; };
 		975F752E2C0A6EDA00E02BA8 /* ARController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 975F752D2C0A6EDA00E02BA8 /* ARController.swift */; };
 /* End PBXBuildFile section */
@@ -18,9 +16,7 @@
 /* Begin PBXFileReference section */
 		975F751A2C0A6A5600E02BA8 /* ARKitOcclusion.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ARKitOcclusion.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		975F751D2C0A6A5600E02BA8 /* ARKitOcclusionApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARKitOcclusionApp.swift; sourceTree = "<group>"; };
-		975F751F2C0A6A5600E02BA8 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		975F75212C0A6A5800E02BA8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		975F75242C0A6A5800E02BA8 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		975F752B2C0A6B9B00E02BA8 /* ARViewContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARViewContainer.swift; sourceTree = "<group>"; };
 		975F752D2C0A6EDA00E02BA8 /* ARController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -56,21 +52,11 @@
 			isa = PBXGroup;
 			children = (
 				975F751D2C0A6A5600E02BA8 /* ARKitOcclusionApp.swift */,
-				975F751F2C0A6A5600E02BA8 /* ContentView.swift */,
 				975F75212C0A6A5800E02BA8 /* Assets.xcassets */,
-				975F75232C0A6A5800E02BA8 /* Preview Content */,
 				975F752B2C0A6B9B00E02BA8 /* ARViewContainer.swift */,
 				975F752D2C0A6EDA00E02BA8 /* ARController.swift */,
 			);
 			path = ARKitOcclusion;
-			sourceTree = "<group>";
-		};
-		975F75232C0A6A5800E02BA8 /* Preview Content */ = {
-			isa = PBXGroup;
-			children = (
-				975F75242C0A6A5800E02BA8 /* Preview Assets.xcassets */,
-			);
-			path = "Preview Content";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -131,7 +117,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				975F75252C0A6A5800E02BA8 /* Preview Assets.xcassets in Resources */,
 				975F75222C0A6A5800E02BA8 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -144,7 +129,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				975F752E2C0A6EDA00E02BA8 /* ARController.swift in Sources */,
-				975F75202C0A6A5600E02BA8 /* ContentView.swift in Sources */,
 				975F751E2C0A6A5600E02BA8 /* ARKitOcclusionApp.swift in Sources */,
 				975F752C2C0A6B9B00E02BA8 /* ARViewContainer.swift in Sources */,
 			);
@@ -279,7 +263,6 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"ARKitOcclusion/Preview Content\"";
 				DEVELOPMENT_TEAM = C47Q8A6352;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -310,7 +293,6 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"ARKitOcclusion/Preview Content\"";
 				DEVELOPMENT_TEAM = C47Q8A6352;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;

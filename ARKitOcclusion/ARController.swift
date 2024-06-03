@@ -1,18 +1,25 @@
-//
-//  ARController.swift
-//  ARKitOcclusion
-//
-//  Created by Stephen Potter on 5/31/24.
-//
-
 import Foundation
 import ARKit
 import SceneKit
 
+/// This class manages everything related to ARKit and SceneKit
 class ARController: NSObject  {
     var sceneView: ARSCNView? = nil
     
     private var cylinderMaterial: SCNMaterial? = nil
+
+    func createARView() -> ARSCNView {
+        let arView = ARSCNView()
+        arView.automaticallyUpdatesLighting = true
+        self.sceneView = arView
+        let configuration = ARWorldTrackingConfiguration()
+        configuration.frameSemantics.insert(.sceneDepth)
+        configuration.frameSemantics.insert(.smoothedSceneDepth)
+
+        arView.session.delegate = self
+        arView.session.run(configuration)
+        return arView
+    }
 
     func createCylinder() -> SCNNode {
         // Create a cylinder that is thin and long
@@ -40,7 +47,7 @@ class ARController: NSObject  {
             print("Error: could not convert depth map to image")
             return
         }
-        axisMaterial.setValue(SCNMaterialProperty(contents: depthMap), forKey: "depthMap")
+        axisMaterial.setValue(SCNMaterialProperty(contents: depthMap), forKey: "depthMap") // todo: is there a more optimal way to do this, like using MTLTexture?
         axisMaterial.setValue(CGFloat(cameraSize.width), forKey: "screenWidth")
         axisMaterial.setValue(CGFloat(cameraSize.height), forKey: "screenHeight")
     }
@@ -48,7 +55,8 @@ class ARController: NSObject  {
 
 extension ARController: ARSessionDelegate {
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
-        guard let sceneView = self.sceneView, let depthData = frame.smoothedSceneDepth?.depthMap else {
+        // note: you can also try frame.smoothedSceneDepth?.depthMap 
+        guard let sceneView = self.sceneView, let depthData = frame.sceneDepth?.depthMap else {
             return
         }
         if let cylinderMaterial = self.cylinderMaterial {
@@ -73,19 +81,18 @@ float screenHeight;
 #pragma body
 constexpr sampler depthSampler(coord::pixel);
 
-float4 model_space_position = scn_node.modelViewTransform * float4(_surface.position, 1);
-float modelDepth = -model_space_position.z;
+float4 modelSpacePosition = scn_node.modelViewTransform * float4(_surface.position, 1);
+// the depth, in meters, of the fragment from the camera
+float modelDepth = -modelSpacePosition.z;
 
 float2 screenPosition = _surface.diffuseTexcoord * float2(screenWidth, screenHeight);
-float depthValue = depthMap.sample(depthSampler, screenPosition).r;
+float physicalDepth = depthMap.sample(depthSampler, screenPosition).r;
 
-if (depthValue <= modelDepth) {
+// if the depth map detects something before this fragment, don't paint
+if (physicalDepth <= modelDepth) {
    discard_fragment();
-} else {
-   _output.color.a = 1.0;
 }
 """
-
 
 /// Converts a pixel buffer into a CGImage and resizes it appropriately
 func pixelBufferToImage(_ buffer: CVPixelBuffer, targetSize: CGSize) -> CGImage? {

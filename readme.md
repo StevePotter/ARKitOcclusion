@@ -18,7 +18,7 @@ Here’s how I’m approaching the solution:
 The shader likely contains the root of the issues, although I suspect there's room for optimization and accuracy improvements.
 
 ## Get Involved
-I’d love your input or help on this project! Check out `ARController.swift` to see the core logic. Whether you’re experienced in AR development or just starting, your contributions are welcome. Also, I'm offering a special gift for anyone who can solve this!
+I’d love your input or help on this project! Check out [ARController.swift](https://github.com/StevePotter/ARKitOcclusion/blob/main/ARKitOcclusion/ARController.swift) to see the core logic. Whether you’re experienced in AR development or just starting, your contributions are welcome. Also, I'm offering a special gift for anyone who can solve this!
 
 ### Discuss and Collaborate
 Have ideas or need clarification? Start a discussion in the Issues section or contact me directly at [email]. Let’s make AR development better together!
